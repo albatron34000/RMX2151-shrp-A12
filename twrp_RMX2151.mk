@@ -30,11 +30,11 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 $(call inherit-product, device/realme/RMX2151/device.mk)
 
 # Inherit some common TWRP stuff.
-$(call inherit-product, vendor/twrp/config/common.mk)
+$(call inherit-product, vendor/omni/config/common.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2151
-PRODUCT_NAME := twrp_RMX2151
+PRODUCT_NAME := omni_RMX2151
 PRODUCT_BRAND := realme
 PRODUCT_MODEL := Realme 7
 PRODUCT_MANUFACTURER := realme
