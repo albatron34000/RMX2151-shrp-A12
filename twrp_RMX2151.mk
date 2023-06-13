@@ -21,17 +21,20 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 LOCAL_PATH := device/realme/RMX2151
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
+# Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
-PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/recovery/root,recovery/root)
+# Inherit from begonia device
+$(call inherit-product, device/xiaomi/begonia/device.mk)
 
-# Inherit from our custom product configuration
-#$(call inherit-product, vendor/omni/config/common.mk)
+# Inherit some common TWRP stuff.
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2151
-PRODUCT_NAME := omni_RMX2151
+PRODUCT_NAME := twrp_RMX2151
 PRODUCT_BRAND := realme
 PRODUCT_MODEL := Realme 7
 PRODUCT_MANUFACTURER := realme
