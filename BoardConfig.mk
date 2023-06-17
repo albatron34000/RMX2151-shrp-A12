@@ -152,7 +152,12 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 
-# TWRP specific build flags
+
+# TWRP Configuration
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.0/lun.%d/file
+RECOVERY_SDCARD_ON_DATA := true
+TW_DEVICE_VERSION := 4
+TW_THEME := portrait_hdpi
 TW_THEME := portrait_hdpi
 RECOVERY_SDCARD_ON_DATA := true
 TW_EXTRA_LANGUAGES := true
