@@ -98,9 +98,6 @@ BOARD_SUPER_PARTITION_GROUPS := main
 BOARD_MAIN_SIZE := 6685720576
 BOARD_MAIN_PARTITION_LIST := system product vendor odm system_ext
 
-# System as root
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
-BOARD_SUPPRESS_SECURE_ERASE := true
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
@@ -133,12 +130,8 @@ TARGET_COPY_OUT_VENDOR := vendor
 
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
-BOARD_ROOT_EXTRA_FOLDERS += metadata
 
-
-# Crypto
-
-    
+  
 # System as root
 BOARD_SUPPRESS_SECURE_ERASE := true
 
@@ -150,7 +143,7 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_HAS_LARGE_FILESYSTEM := true
+
 
 
 # TWRP Configuration
