@@ -147,6 +147,7 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 
 
 # TWRP Configuration
+TW_PREPARE_DATA_MEDIA_EARLY := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.0/lun.%d/file
 RECOVERY_SDCARD_ON_DATA := true
 TW_DEVICE_VERSION := 4
