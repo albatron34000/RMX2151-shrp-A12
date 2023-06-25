@@ -27,7 +27,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 # Inherit from begonia device
-$(call inherit-product, device/realme/RMX2151/device.mk)
+$(call inherit-product, device/realme/RMX2001/device.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2001
