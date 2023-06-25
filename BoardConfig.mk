@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/realme/RMX2151
+DEVICE_PATH := device/realme/RMX2001
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
