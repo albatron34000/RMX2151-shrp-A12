@@ -19,7 +19,7 @@
 PRODUCT_RELEASE_NAME := RMX2151
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-LOCAL_PATH := device/realme/RMX2151
+LOCAL_PATH := device/realme/RMX2001
 
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
@@ -30,8 +30,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 $(call inherit-product, device/realme/RMX2151/device.mk)
 
 ## Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := RMX2151
-PRODUCT_NAME := omni_RMX2151
+PRODUCT_DEVICE := RMX2001
+PRODUCT_NAME := omni_RMX2001
 PRODUCT_BRAND := realme
 PRODUCT_MODEL := Realme 7
 PRODUCT_MANUFACTURER := realme
