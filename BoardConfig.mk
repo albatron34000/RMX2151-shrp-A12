@@ -143,7 +143,7 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_HAS_NO_SELECT_BUTTON := true
-
+BOARD_HAS_NO_REAL_SDCARD := true
 
 
 # TWRP Configuration
@@ -226,5 +226,5 @@ SHRP_DARK := true
 #SHRP_FLASH_MAX_BRIGHTNESS := 2
 # Magisk
 INC_IN_REC_MAGISK := true
-
+SHRP_LITE := true
 
