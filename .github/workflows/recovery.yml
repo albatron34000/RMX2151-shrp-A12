@@ -1,4 +1,5 @@
-name: build
+name: Recovery Build
+
 on:
   workflow_dispatch:
     inputs:
@@ -13,11 +14,11 @@ on:
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/albatron34000/RMX2151-shrp-A12'
+        default: 'https://github.com/albatron34000/RMX2151-twrp-A12'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'main'
+        default: 'vb2'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
@@ -45,7 +46,8 @@ jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-latest
-    # You can use either of the ubuntu-18.04 or ubuntu-20.04 runner
+    permissions:
+      contents: write
     steps:
     - name: Display Run Parameters
       run: |
@@ -72,7 +74,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt -y upgrade
-        sudo apt -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev python-is-python3
+        sudo apt -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-gtk3-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev libncurses5 python3
+
     - name: Install OpenJDK
       uses: actions/setup-java@v3
       with:
@@ -85,26 +88,21 @@ jobs:
       with:
           ssh-private-key: |
               ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: Set variables
-      run: |
-        echo "::set-output name=date::$(date +%F)"
-      id: var
-      
+
     - name: Install repo
       run: |
         mkdir ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
-    
       
     - name: Initialize repo
       run: |
         mkdir workspace
         cd workspace
-        echo "::set-output name=pwd::$(pwd)"
-        git config --global user.name "Gofaraway71"
-        git config --global user.email "aalbatron@gmail.com"
+        echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
+        git config --global user.name "YZ-Bruh"
+        git config --global user.email "yagizzengin73@gmail.com"
         repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
       id: pwd
           
@@ -116,7 +114,7 @@ jobs:
     - name: Clone device tree
       run: |
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
-      working-directory: ${{ steps.pwd.outputs.pwd }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Clone common tree
       if: |
@@ -124,13 +122,13 @@ jobs:
         && github.event.inputs.COMMON_PATH != null
       run: |
         git clone ${{ github.event.inputs.COMMON_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.COMMON_PATH }}
-      working-directory: ${{ steps.pwd.outputs.pwd }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Check Build Tree
       uses: haya14busa/action-cond@v1
       id: buildtree
       with:
-        cond: ${{ github.event.inputs.MANIFEST_BRANCH == 'twrp-11' || github.event.inputs.MANIFEST_BRANCH == 'shrp-12.1' }}
+        cond: ${{ github.event.inputs.MANIFEST_BRANCH == 'shrp-11' || github.event.inputs.MANIFEST_BRANCH == 'shrp-12.1' }}
         if_true: omni
         if_false: omni
 
@@ -138,7 +136,7 @@ jobs:
       run: |
         bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
         repo sync -j$(nproc --all)
-      working-directory: ${{ steps.pwd.outputs.pwd }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
     - name: Set Swap Space
@@ -146,26 +144,20 @@ jobs:
       with:
         swap-size-gb: 12
 
-    - name: Check Build Branch
-      if: ${{ github.event.inputs.MANIFEST_BRANCH == 'shrp-12.1' }}
-      run: |
-        
-        source build/envsetup.sh
-        repopick 5405 5540
-      working-directory: ${{ steps.pwd.outputs.pwd }}
-
     - name: Building recovery
       run: |
-        sudo rm -rf out/ 
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka recoveryimage -j$(nproc --all)
-      working-directory: ${{ steps.pwd.outputs.pwd }}
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
+        files: | 
+          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
+          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
