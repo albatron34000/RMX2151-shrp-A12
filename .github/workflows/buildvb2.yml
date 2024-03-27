@@ -1,4 +1,4 @@
-name: Recovery Build
+name: Recovery Build vb2
 on:
   workflow_dispatch:
     inputs:
