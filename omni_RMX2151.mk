@@ -41,8 +41,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.build.security_patch=2099-12-31
 
 PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.0-impl-mock \
-    android.hardware.fastboot@1.0-impl-mock.recovery
+    android.hardware.fastboot@1.1-impl-mock \
+    android.hardware.fastboot@1.1-impl-mock.recovery
 
 # Additional target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
